@@ -1,0 +1,17 @@
+/.env
+/.env.local
+/.env.*.local
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/cache/*
+!/storage/cache/.gitkeep
+/vendor/
+/.phpunit.cache/
+/phpunit.xml
+*.log
+.DS_Store
+Thumbs.db
+/public/uploads/
+/.idea/
+/.vscode/
+composer.lock

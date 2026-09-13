@@ -1,0 +1,11 @@
+# Tareas programadas de Plesk (PHP 8.2+ del dominio).
+# Sustituye las rutas por las de tu suscripción.
+
+# Recordatorio de cobro mensual (correo + registro). Diario 08:15.
+/opt/plesk/php/8.3/bin/php /var/www/vhosts/EJEMPLO/httpdocs/../cron/payment-reminders.php
+
+# Si el docroot ES httpdocs/public:
+/opt/plesk/php/8.3/bin/php /var/www/vhosts/EJEMPLO/httpdocs/../cron/payment-reminders.php
+
+# Sincronización opcional de estados Mollie. Diario 08:20.
+/opt/plesk/php/8.3/bin/php /var/www/vhosts/EJEMPLO/positron/cron/subscription-sync.php
