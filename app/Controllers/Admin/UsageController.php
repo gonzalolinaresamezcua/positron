@@ -20,7 +20,6 @@ final class UsageController
             'daily' => UsageEvent::daily(30),
             'top' => UsageEvent::topUsers(25),
             'config' => [
-                'budget' => $limiter->budgetEur(),
                 'in' => $limiter->inputCostPer1M(),
                 'out' => $limiter->outputCostPer1M(),
                 'allowance' => $limiter->tokenAllowance(),

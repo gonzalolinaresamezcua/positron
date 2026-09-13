@@ -9,12 +9,10 @@ use Positrom\Core\Router;
 use Positrom\Core\Session;
 use Positrom\Core\Validator;
 use Positrom\Models\Setting;
-use Positrom\Models\Subscription;
 use Positrom\Models\UsageEvent;
 use Positrom\Models\User;
-use Positrom\Services\CursorClient;
 use Positrom\Services\EnvWriter;
-use Positrom\Services\MollieClient;
+use Positrom\Services\OpenAIClient;
 use Positrom\Services\UsageLimiter;
 use Positrom\Tests\FakeTransport;
 
@@ -82,19 +80,17 @@ $router = new Router();
 expect($router->match('/admin/clientes/{id}', '/admin/clientes/7') === ['id' => '7'], 'router captura id');
 expect($router->match('/chat', '/cuenta') === null, 'router no coincide');
 
-$client = new CursorClient(new FakeTransport(200, [
-    'choices' => [['message' => ['content' => 'Hola desde composer']]],
+$client = new OpenAIClient(new FakeTransport(200, [
+    'choices' => [['message' => ['content' => 'Hola desde gpt-6-astra']]],
     'usage' => ['prompt_tokens' => 12, 'completion_tokens' => 8],
 ]));
-expect(!$client->configured(), 'Cursor placeholder no está configurado');
-
-$mollie = new MollieClient(new FakeTransport(200, ['id' => 'tr_test']));
-expect(!$mollie->configured(), 'Mollie placeholder no está configurado');
-expect(CursorClient::estimateTokens('abcd') >= 1, 'estimación de tokens');
+expect(!$client->configured(), 'OpenAI placeholder no está configurado');
+expect(OpenAIClient::estimateTokens('abcd') >= 1, 'estimación de tokens');
 
 echo "== Integración MySQL ==\n";
 $schema = file_get_contents($root . '/database/schema.sql');
 expect($schema !== false && str_contains($schema, 'CREATE TABLE'), 'schema.sql presente');
+expect($schema !== false && !str_contains($schema, 'subscriptions'), 'schema sin suscripciones');
 
 try {
     Database::query('SELECT 1');
@@ -106,34 +102,30 @@ try {
 }
 
 $tables = Database::fetchAll('SHOW TABLES');
-expect(count($tables) >= 8, 'tablas creadas');
+expect(count($tables) >= 6, 'tablas creadas');
 
 $admin = User::findByEmail('admin@positrom.local');
 expect($admin !== null && $admin['role'] === 'admin', 'admin semilla');
 expect($admin !== null && password_verify('Positrom#Admin2026', $admin['password_hash']), 'hash admin documentado');
+expect(User::countByRole('admin') === 1, 'un solo administrador');
 
 $limiter = new UsageLimiter();
-expect($limiter->budgetEur() > 0, 'presupuesto mensual configurado');
 expect($limiter->estimateCost(1_000_000, 1_000_000) > 0, 'coste de 1M+1M tokens > 0');
 
 $email = 'cliente.prueba+' . bin2hex(random_bytes(3)) . '@positrom.local';
 $uid = User::create($email, 'ClaveSegura#99', 'Cliente Prueba');
-Subscription::createForUser($uid, 12.00);
-UsageEvent::record($uid, null, 'composer-2.5', 100, 50, 0.01);
+UsageEvent::record($uid, null, 'gpt-6-astra', 100, 50, 0.01);
 $snap = $limiter->snapshot($uid);
 expect($snap['tokens'] === 150 && $snap['requests'] >= 1, 'snapshot de uso real');
-expect($snap['exhausted'] === false, 'no agotado con 0.01 €');
+expect($snap['exhausted'] === false, 'sin tope por defecto no agotado');
 
-UsageEvent::record($uid, null, 'composer-2.5', 0, 0, $limiter->budgetEur() + 1);
-$snap2 = $limiter->snapshot($uid);
-expect($snap2['exhausted'] === true, 'agotado al superar presupuesto');
-$blocked = false;
-try {
-    $limiter->assertCanSpend($uid);
-} catch (\Positrom\Services\UsageExhaustedException) {
-    $blocked = true;
-}
-expect($blocked, 'assertCanSpend lanza al agotar');
+Setting::set('usage.monthly_token_allowance', '100');
+Config::set('usage.token_allowance', '100');
+$limiter2 = new UsageLimiter();
+UsageEvent::record($uid, null, 'gpt-6-astra', 0, 60, 0.01);
+$snap2 = $limiter2->snapshot($uid);
+expect($snap2['exhausted'] === true, 'agotado al superar tope opcional');
+Setting::set('usage.monthly_token_allowance', '');
 
 $envBackup = file_get_contents($envPath);
 $written = EnvWriter::update(['APP_URL' => 'https://positrom.test']);
@@ -146,23 +138,21 @@ file_put_contents($envPath, (string) $envBackup);
 \Positrom\Core\Env::reload($envPath);
 Config::boot();
 
-$mollie2 = new MollieClient(new FakeTransport(200, ['id' => 'tr_demo']));
-expect(!$mollie2->configured(), 'sigue sin clave Mollie real');
-
-Config::set('cursor.key', 'crsr_test_realish_key_value');
+Config::set('openai.key', 'sk_test_realish_key_value_1234567890');
 $ft = new FakeTransport(200, [
     'choices' => [['message' => ['content' => 'Respuesta de prueba']]],
     'usage' => ['prompt_tokens' => 3, 'completion_tokens' => 5],
 ]);
-$cc = new CursorClient($ft);
-$done = $cc->complete([['role' => 'user', 'content' => 'hola']]);
-expect($done->text === 'Respuesta de prueba' && $done->tokensIn === 3, 'CursorClient parsea completions');
-expect(str_contains($ft->calls[0]['url'], '/v1/chat/completions'), 'Cursor usa chat path');
-expect(($ft->calls[0]['headers']['Authorization'] ?? '') === 'Bearer crsr_test_realish_key_value', 'Cursor envía Bearer');
-Config::set('cursor.key', 'crsr_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+$oc = new OpenAIClient($ft);
+$done = $oc->complete([['role' => 'user', 'content' => 'hola']]);
+expect($done->text === 'Respuesta de prueba' && $done->tokensIn === 3, 'OpenAIClient parsea completions');
+expect(str_contains($ft->calls[0]['url'], '/v1/chat/completions'), 'OpenAI usa chat path');
+expect(($ft->calls[0]['headers']['Authorization'] ?? '') === 'Bearer sk_test_realish_key_value_1234567890', 'OpenAI envía Bearer');
+expect($done->model === 'gpt-6-astra' || $done->model !== '', 'modelo en completion');
+Config::set('openai.key', 'sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
 
-Setting::set('usage.monthly_budget_eur', '12.00');
-expect((string) Setting::get('usage.monthly_budget_eur') === '12.00', 'settings persistidas');
+Setting::set('openai.model', 'gpt-6-astra');
+expect((string) Setting::get('openai.model') === 'gpt-6-astra', 'settings OpenAI persistidas');
 
 echo "== HTTP ==\n";
 $host = '127.0.0.1';
@@ -184,11 +174,9 @@ if (!is_resource($proc)) {
     expect(false, 'arrancar servidor PHP');
 } else {
     $ready = false;
-    $hit = '';
     for ($i = 0; $i < 30; $i++) {
         usleep(150000);
-        $ctx = stream_context_create(['http' => ['timeout' => 1, 'ignore_errors' => true]]);
-        $hit = @file_get_contents("http://{$host}:{$port}/salud", false, $ctx);
+        $hit = @file_get_contents("http://{$host}:{$port}/salud", false, stream_context_create(['http' => ['timeout' => 1, 'ignore_errors' => true]]));
         if (is_string($hit) && str_contains($hit, 'POSITROM')) {
             $ready = true;
             break;
@@ -197,9 +185,10 @@ if (!is_resource($proc)) {
     expect($ready, 'GET /salud');
 
     $home = @file_get_contents("http://{$host}:{$port}/", false, stream_context_create(['http' => ['timeout' => 3, 'ignore_errors' => true]]));
-    expect(is_string($home) && str_contains($home, 'POSITROM') && str_contains($home, '12'), 'GET / marketing');
-    expect(is_string($home) && str_contains($home, '10×') && str_contains($home, 'ChatGPT') && str_contains($home, 'Claude') && str_contains($home, 'Gemini'), 'landing vs grandes suscripciones');
-    expect(is_string($home) && !str_contains($home, 'POSITRON') && !str_contains($home, 'composer-2.5'), 'landing sin POSITRON ni composer-2.5');
+    expect(is_string($home) && str_contains($home, 'POSITROM') && str_contains($home, 'gratis'), 'GET / marketing gratuito');
+    expect(is_string($home) && str_contains($home, 'gpt-6-astra') && str_contains($home, 'OpenAI'), 'landing OpenAI gpt-6-astra');
+    expect(is_string($home) && !str_contains($home, 'Mollie') && !str_contains($home, 'composer-2.5'), 'landing sin Mollie ni composer-2.5');
+    expect(is_string($home) && !str_contains($home, 'POSITRON'), 'landing sin POSITRON');
     expect(is_string($home) && str_contains($home, 'positrom-galactico.css'), 'CSS Positrom Galáctico');
     expect(is_string($home) && str_contains($home, 'logo-positrom.svg'), 'logo SVG');
 
@@ -208,6 +197,7 @@ if (!is_resource($proc)) {
 
     $reg = @file_get_contents("http://{$host}:{$port}/registro", false, stream_context_create(['http' => ['timeout' => 3, 'ignore_errors' => true]]));
     expect(is_string($reg) && str_contains($reg, 'password_confirmation'), 'GET /registro');
+    expect(is_string($reg) && !str_contains($reg, '12 €'), 'registro sin paywall');
 
     $priv = @file_get_contents("http://{$host}:{$port}/privacidad", false, stream_context_create(['http' => ['timeout' => 3, 'ignore_errors' => true]]));
     expect(is_string($priv) && str_contains($priv, 'Privacidad'), 'GET /privacidad');

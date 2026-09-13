@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /admin
-Disallow: /cuenta
 Disallow: /chat
-Disallow: /checkout
-Disallow: /webhooks/
+Disallow: /cuenta

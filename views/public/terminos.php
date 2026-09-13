@@ -1,6 +1,6 @@
 <article class="pg-prose">
-    <h1>Términos de suscripción</h1>
-    <p>POSITROM se vende como un único plan de <strong>12 € al mes</strong>, con renovación automática mediante Mollie.</p>
-    <p>El acceso al chat requiere suscripción activa. El uso de tokens tiene un tope mensual equivalente al precio del plan, según la tarifa que configure la administración.</p>
-    <p>Puedes cancelar cuando quieras desde tu cuenta. Los cobros ya realizados no se prorratean salvo acuerdo expreso.</p>
+    <h1>Términos de uso</h1>
+    <p>POSITROM es software gratuito autoalojado. No hay suscripción ni paywall dentro del producto.</p>
+    <p>El acceso al chat requiere cuenta activa. Un administrador puede desactivar cuentas o fijar un tope opcional de tokens mensual.</p>
+    <p>El consumo del modelo OpenAI lo cubre quien opera el servidor con su propia clave API.</p>
 </article>

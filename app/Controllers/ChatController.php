@@ -9,11 +9,10 @@ use Positrom\Core\Config;
 use Positrom\Core\View;
 use Positrom\Models\Conversation;
 use Positrom\Models\Message;
-use Positrom\Models\Subscription;
 use Positrom\Models\UsageEvent;
-use Positrom\Services\CursorClient;
-use Positrom\Services\CursorNotConfiguredException;
-use Positrom\Services\CursorRequestException;
+use Positrom\Services\OpenAIClient;
+use Positrom\Services\OpenAINotConfiguredException;
+use Positrom\Services\OpenAIRequestException;
 use Positrom\Services\UsageExhaustedException;
 use Positrom\Services\UsageLimiter;
 
@@ -22,11 +21,7 @@ final class ChatController
     public function index(): void
     {
         $user = Auth::requireUser();
-        $sub = Subscription::forUser((int) $user['id']);
-        if (!Subscription::isChatAllowed($sub)) {
-            set_flash('error', 'Necesitas una suscripción activa para usar el chat.');
-            redirect('/checkout');
-        }
+        $this->guardActive($user);
         $conversations = Conversation::forUser((int) $user['id']);
         $currentId = isset($_GET['c']) ? (int) $_GET['c'] : (int) ($conversations[0]['id'] ?? 0);
         $current = $currentId > 0 ? Conversation::ownedBy($currentId, (int) $user['id']) : null;
@@ -35,7 +30,6 @@ final class ChatController
         View::render('chat/index', [
             'title' => 'Chat POSITROM',
             'user' => $user,
-            'subscription' => $sub,
             'conversations' => $conversations,
             'current' => $current,
             'messages' => $messages,
@@ -46,7 +40,7 @@ final class ChatController
     public function createConversation(): void
     {
         $user = Auth::requireUser();
-        $this->guardSub($user);
+        $this->guardActive($user);
         $id = Conversation::create((int) $user['id']);
         redirect('/chat?c=' . $id);
     }
@@ -54,7 +48,7 @@ final class ChatController
     public function send(): void
     {
         $user = Auth::requireUser();
-        $this->guardSub($user);
+        $this->guardActive($user);
         $userId = (int) $user['id'];
 
         $limiter = new UsageLimiter();
@@ -89,7 +83,7 @@ final class ChatController
         }
 
         $history = Message::forConversation((int) $conv['id']);
-        $payload = [['role' => 'system', 'content' => CursorClient::systemPrompt()]];
+        $payload = [['role' => 'system', 'content' => OpenAIClient::systemPrompt()]];
         foreach ($history as $row) {
             if ($row['role'] === 'system') {
                 continue;
@@ -102,12 +96,12 @@ final class ChatController
             array_unshift($payload, $system);
         }
 
-        $client = new CursorClient();
+        $client = new OpenAIClient();
         try {
             $completion = $client->complete($payload);
-        } catch (CursorNotConfiguredException $e) {
+        } catch (OpenAINotConfiguredException $e) {
             json_response(['ok' => false, 'error' => $e->getMessage()], 503);
-        } catch (CursorRequestException $e) {
+        } catch (OpenAIRequestException $e) {
             json_response(['ok' => false, 'error' => $e->getMessage()], 502);
         }
 
@@ -135,14 +129,14 @@ final class ChatController
         ]);
     }
 
-    private function guardSub(array $user): void
+    private function guardActive(array $user): void
     {
-        $sub = Subscription::forUser((int) $user['id']);
-        if (!Subscription::isChatAllowed($sub)) {
+        if (!(int) $user['is_active']) {
             if (\Positrom\Core\Router::wantsJson() || ($_SERVER['HTTP_ACCEPT'] ?? '') === 'application/json') {
-                json_response(['ok' => false, 'error' => 'Suscripción inactiva.'], 403);
+                json_response(['ok' => false, 'error' => 'Cuenta inactiva.'], 403);
             }
-            redirect('/checkout');
+            set_flash('error', 'Tu cuenta está inactiva. Contacta con administración.');
+            redirect('/cuenta');
         }
     }
 

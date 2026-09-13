@@ -13,8 +13,10 @@
             <?php endforeach; ?>
         </ul>
         <div class="pg-chat-quota">
-            <span><?= e(money_eur((float) $usage['spent_eur'])) ?> / <?= e(money_eur((float) $usage['budget_eur'])) ?></span>
-            <div class="pg-meter"><i style="width: <?= e((string) min(100, $usage['budget_eur'] > 0 ? ($usage['spent_eur'] / $usage['budget_eur']) * 100 : 0)) ?>%"></i></div>
+            <span><?= e((string) $usage['tokens']) ?> tokens · <?= e((string) $usage['requests']) ?> peticiones (mes)</span>
+            <?php if ($usage['token_allowance']): ?>
+            <div class="pg-meter"><i style="width: <?= e((string) min(100, $usage['token_allowance'] > 0 ? ($usage['tokens'] / $usage['token_allowance']) * 100 : 0)) ?>%"></i></div>
+            <?php endif; ?>
         </div>
     </aside>
     <div class="pg-chat-main">
@@ -26,7 +28,7 @@
                 </article>
             <?php endforeach; ?>
             <?php if ($messages === []): ?>
-                <p class="pg-muted">El rayo gamma está listo. Escribe para hablar con composer-2.5.</p>
+                <p class="pg-muted">El rayo gamma está listo. Escribe para hablar con gpt-6-astra.</p>
             <?php endif; ?>
         </div>
         <form class="pg-chat-form" id="chat-form" data-conversation="<?= e((string) ($current['id'] ?? '')) ?>">

@@ -8,9 +8,7 @@ use Positrom\Core\Auth;
 use Positrom\Core\Session;
 use Positrom\Core\Validator;
 use Positrom\Core\View;
-use Positrom\Models\Subscription;
 use Positrom\Models\User;
-use Positrom\Services\BillingService;
 
 final class AuthController
 {
@@ -69,12 +67,10 @@ final class AuthController
             redirect('/registro');
         }
         $id = User::create((string) $_POST['email'], (string) $_POST['password'], trim((string) $_POST['name']));
-        $billing = new BillingService();
-        Subscription::createForUser($id, $billing->planPrice());
         Auth::loginId($id);
         Session::forget('_old');
-        set_flash('ok', 'Cuenta creada. Activa tu órbita mensual para entrar al chat.');
-        redirect('/checkout');
+        set_flash('ok', 'Cuenta creada. Ya puedes usar el chat POSITROM.');
+        redirect('/chat');
     }
 
     public function logout(): void

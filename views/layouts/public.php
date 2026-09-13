@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e(($title ?? 'POSITROM') . ' · POSITROM') ?></title>
-    <meta name="description" content="POSITROM en positrom.com: chat de IA a 12 €/mes. 10× el rendimiento de una suscripción típica frente a ChatGPT, Claude o Gemini.">
+    <meta name="description" content="POSITROM en positrom.com: chat IA gratuito autoalojado con OpenAI gpt-6-astra. PHP 8 + MySQL.">
     <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
     <meta property="og:title" content="POSITROM">
-    <meta property="og:description" content="POSITROM rinde 10× más que ChatGPT, Claude o Gemini de gama media-alta. 12 € al mes. positrom.com">
+    <meta property="og:description" content="Chat IA gratis y autoalojado con OpenAI. Registro público, panel admin, Positrom Galáctico.">
     <meta property="og:image" content="<?= e(url('/assets/img/logo-positrom.png')) ?>">
     <link rel="stylesheet" href="/assets/css/positrom-galactico.css">
 </head>
@@ -20,9 +20,9 @@
             <span>POSITROM</span>
         </a>
         <nav class="pg-nav-links">
-            <a href="/#versus">10× vs ChatGPT</a>
+            <a href="/#versus">Por qué POSITROM</a>
             <a href="/#comparativa">Comparativa</a>
-            <a href="/#orbita">El plan</a>
+            <a href="/#como">Cómo funciona</a>
             <?php if (current_user()): ?>
                 <a href="/chat">Chat</a>
                 <a href="/cuenta">Cuenta</a>
@@ -40,7 +40,7 @@
     <footer class="pg-foot">
         <div>
             <strong>POSITROM</strong>
-            <span>positrom.com · 12 €/mes · 10× vs ChatGPT, Claude y Gemini</span>
+            <span>positrom.com · gratis · autoalojado · OpenAI</span>
         </div>
         <nav>
             <a href="/privacidad">Privacidad</a>

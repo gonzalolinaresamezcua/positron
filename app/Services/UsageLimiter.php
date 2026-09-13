@@ -11,15 +11,6 @@ use Positrom\Models\UsageEvent;
 
 final class UsageLimiter
 {
-    public function budgetEur(): float
-    {
-        $fromSettings = Setting::get('usage.monthly_budget_eur');
-        if ($fromSettings !== null && $fromSettings !== '') {
-            return (float) $fromSettings;
-        }
-        return (float) Config::get('usage.budget', 12.0);
-    }
-
     public function inputCostPer1M(): float
     {
         $v = Setting::get('usage.token_input_cost_eur_per_1m');
@@ -53,14 +44,15 @@ final class UsageLimiter
 
     public function snapshot(int $userId, ?string $periodYm = null): array
     {
+        if ($userId <= 0) {
+            return $this->emptySnapshot($periodYm);
+        }
         $totals = UsageEvent::monthTotals($userId, $periodYm);
         $tokens = (int) $totals['tokens_in'] + (int) $totals['tokens_out'];
         $spent = (float) $totals['cost_eur'];
-        $budget = $this->budgetEur();
         $allowance = $this->tokenAllowance();
-        $remainingEur = max(0, $budget - $spent);
         $remainingTokens = $allowance !== null ? max(0, $allowance - $tokens) : null;
-        $exhausted = $spent >= $budget || ($allowance !== null && $tokens >= $allowance);
+        $exhausted = $allowance !== null && $tokens >= $allowance;
         return [
             'period' => $periodYm ?? period_ym(),
             'tokens_in' => (int) $totals['tokens_in'],
@@ -68,11 +60,27 @@ final class UsageLimiter
             'tokens' => $tokens,
             'requests' => (int) $totals['requests'],
             'spent_eur' => $spent,
-            'budget_eur' => $budget,
-            'remaining_eur' => $remainingEur,
             'token_allowance' => $allowance,
             'remaining_tokens' => $remainingTokens,
             'exhausted' => $exhausted,
+            'input_cost_per_1m' => $this->inputCostPer1M(),
+            'output_cost_per_1m' => $this->outputCostPer1M(),
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    private function emptySnapshot(?string $periodYm): array
+    {
+        return [
+            'period' => $periodYm ?? period_ym(),
+            'tokens_in' => 0,
+            'tokens_out' => 0,
+            'tokens' => 0,
+            'requests' => 0,
+            'spent_eur' => 0.0,
+            'token_allowance' => $this->tokenAllowance(),
+            'remaining_tokens' => $this->tokenAllowance(),
+            'exhausted' => false,
             'input_cost_per_1m' => $this->inputCostPer1M(),
             'output_cost_per_1m' => $this->outputCostPer1M(),
         ];
@@ -83,7 +91,7 @@ final class UsageLimiter
         $snap = $this->snapshot($userId);
         if ($snap['exhausted']) {
             throw new UsageExhaustedException(
-                'Has agotado el presupuesto mensual de tokens vinculado a los 12 €. El chat se reanuda el próximo ciclo o si un administrador ajusta el cupo.'
+                'Has alcanzado el tope mensual de tokens configurado por administración. El chat se reanuda el próximo mes o si se ajusta el cupo.'
             );
         }
         return $snap;

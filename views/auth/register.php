@@ -1,7 +1,7 @@
 <form class="pg-card pg-form" method="post" action="/registro">
     <?= csrf_field() ?>
     <h1>Crear cuenta</h1>
-    <p class="pg-muted">Un plan: 12 € al mes. Sin escalones.</p>
+    <p class="pg-muted">Registro gratuito. Acceso inmediato al chat POSITROM.</p>
     <label class="pg-field">
         <span>Nombre</span>
         <input class="pg-input" type="text" name="name" value="<?= e(old('name')) ?>" required maxlength="120">

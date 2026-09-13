@@ -6,7 +6,6 @@ namespace Positrom\Controllers\Admin;
 
 use Positrom\Core\View;
 use Positrom\Services\StatsService;
-use Positrom\Services\UsageLimiter;
 
 final class DashboardController
 {
@@ -15,8 +14,6 @@ final class DashboardController
         View::render('admin/dashboard', [
             'title' => 'Panel POSITROM',
             'stats' => (new StatsService())->dashboard(),
-            'limiter' => (new UsageLimiter())->snapshot(0),
-            'budget' => (new UsageLimiter())->budgetEur(),
         ], 'layouts/admin');
     }
 }

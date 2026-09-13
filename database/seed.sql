@@ -13,15 +13,10 @@ VALUES (
 ON DUPLICATE KEY UPDATE email = email;
 
 INSERT INTO settings (setting_key, setting_value, updated_at) VALUES
-    ('plan.price_eur', '12.00', NOW()),
-    ('plan.interval', '1 month', NOW()),
-    ('usage.monthly_budget_eur', '12.00', NOW()),
     ('usage.token_input_cost_eur_per_1m', '0.50', NOW()),
     ('usage.token_output_cost_eur_per_1m', '2.50', NOW()),
     ('usage.monthly_token_allowance', '', NOW()),
-    ('billing.auto_activate_on_payment', '1', NOW()),
-    ('billing.reminder_days_before', '3', NOW()),
-    ('cursor.model', 'composer-2.5', NOW()),
-    ('cursor.api_base', '', NOW()),
-    ('cursor.chat_path', '/v1/chat/completions', NOW())
+    ('openai.model', 'gpt-6-astra', NOW()),
+    ('openai.api_base', '', NOW()),
+    ('openai.chat_path', '/v1/chat/completions', NOW())
 ON DUPLICATE KEY UPDATE setting_key = setting_key;

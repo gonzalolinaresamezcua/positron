@@ -16,9 +16,8 @@
         </a>
         <nav>
             <a href="/admin">Panel</a>
-            <a href="/admin/clientes">Clientes</a>
-            <a href="/admin/pagos">Pagos</a>
-            <a href="/admin/uso">Tokens y gasto</a>
+            <a href="/admin/clientes">Usuarios</a>
+            <a href="/admin/uso">Tokens y uso</a>
             <a href="/admin/ajustes">Ajustes</a>
             <a href="/chat">Ir al chat</a>
             <a href="/">Web pública</a>
@@ -31,7 +30,7 @@
     <div class="pg-admin-main">
         <header class="pg-admin-bar">
             <h1><?= e($title ?? 'Admin') ?></h1>
-            <span class="pg-pill">12 € / mes</span>
+            <span class="pg-pill">Gratis · autoalojado</span>
         </header>
         <?php require POSITROM_VIEWS . '/partials/flash.php'; ?>
         <?= $content ?? '' ?>

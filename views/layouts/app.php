@@ -18,7 +18,6 @@
         <nav class="pg-nav-links">
             <a href="/chat">Chat</a>
             <a href="/cuenta">Cuenta</a>
-            <a href="/checkout">Plan</a>
             <?php if (is_admin()): ?><a href="/admin">Admin</a><?php endif; ?>
             <form method="post" action="/salida" class="pg-inline">
                 <?= csrf_field() ?>

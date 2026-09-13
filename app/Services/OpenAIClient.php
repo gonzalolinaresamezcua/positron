@@ -9,7 +9,7 @@ use Positrom\Http\CurlTransport;
 use Positrom\Http\HttpTransport;
 use Positrom\Models\Setting;
 
-final class CursorClient
+final class OpenAIClient
 {
     public function __construct(private ?HttpTransport $transport = null)
     {
@@ -18,26 +18,26 @@ final class CursorClient
 
     public function apiKey(): string
     {
-        return trim((string) Config::get('cursor.key', ''));
+        return trim((string) Config::get('openai.key', ''));
     }
 
     public function baseUrl(): string
     {
-        $fromSettings = trim((string) Setting::get('cursor.api_base', ''));
-        $base = $fromSettings !== '' ? $fromSettings : (string) Config::get('cursor.base', 'https://api.cursor.com');
+        $fromSettings = trim((string) Setting::get('openai.api_base', ''));
+        $base = $fromSettings !== '' ? $fromSettings : (string) Config::get('openai.base', 'https://api.openai.com');
         return rtrim($base, '/');
     }
 
     public function model(): string
     {
-        $fromSettings = trim((string) Setting::get('cursor.model', ''));
-        return $fromSettings !== '' ? $fromSettings : (string) Config::get('cursor.model', 'composer-2.5');
+        $fromSettings = trim((string) Setting::get('openai.model', ''));
+        return $fromSettings !== '' ? $fromSettings : (string) Config::get('openai.model', 'gpt-6-astra');
     }
 
     public function chatPath(): string
     {
-        $fromSettings = trim((string) Setting::get('cursor.chat_path', ''));
-        $path = $fromSettings !== '' ? $fromSettings : (string) Config::get('cursor.path', '/v1/chat/completions');
+        $fromSettings = trim((string) Setting::get('openai.chat_path', ''));
+        $path = $fromSettings !== '' ? $fromSettings : (string) Config::get('openai.path', '/v1/chat/completions');
         return '/' . ltrim($path, '/');
     }
 
@@ -50,11 +50,11 @@ final class CursorClient
     /**
      * @param list<array{role:string,content:string}> $messages
      */
-    public function complete(array $messages): CursorCompletion
+    public function complete(array $messages): OpenAICompletion
     {
         if (!$this->configured()) {
-            throw new CursorNotConfiguredException(
-                'El cliente Cursor no está configurado. Un administrador debe guardar CURSOR_API_KEY (y la URL base) en Ajustes.'
+            throw new OpenAINotConfiguredException(
+                'OpenAI no está configurado. Un administrador debe guardar OPENAI_API_KEY en Ajustes o en .env.'
             );
         }
 
@@ -66,7 +66,7 @@ final class CursorClient
         ];
         $body = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         if ($body === false) {
-            throw new \RuntimeException('No se pudo serializar la petición a Cursor.');
+            throw new \RuntimeException('No se pudo serializar la petición a OpenAI.');
         }
 
         $response = $this->transport->request('POST', $url, [
@@ -78,8 +78,8 @@ final class CursorClient
         $json = $response->json();
         if (!$response->ok() || $json === null) {
             $hint = $json['error']['message'] ?? $json['message'] ?? mb_substr($response->body, 0, 240);
-            throw new CursorRequestException(
-                'Cursor no respondió correctamente (' . $response->status . '): ' . $hint,
+            throw new OpenAIRequestException(
+                'OpenAI no respondió correctamente (' . $response->status . '): ' . $hint,
                 $response->status
             );
         }
@@ -89,7 +89,7 @@ final class CursorClient
             ?? $json['message']['content']
             ?? null;
         if (!is_string($text) || $text === '') {
-            throw new CursorRequestException('La respuesta de Cursor no incluye texto utilizable.', $response->status);
+            throw new OpenAIRequestException('La respuesta de OpenAI no incluye texto utilizable.', $response->status);
         }
 
         $in = (int) ($json['usage']['prompt_tokens'] ?? $json['usage']['input_tokens'] ?? 0);
@@ -99,7 +99,7 @@ final class CursorClient
             $out = self::estimateTokens($text);
         }
 
-        return new CursorCompletion($text, $this->model(), $in, $out, $json);
+        return new OpenAICompletion($text, $this->model(), $in, $out, $json);
     }
 
     public static function estimateTokens(string $text): int
@@ -110,13 +110,13 @@ final class CursorClient
 
     public static function systemPrompt(): string
     {
-        return 'Eres POSITROM, un asistente de IA de la suscripción POSITROM. '
+        return 'Eres POSITROM, un asistente de IA gratuito autoalojado con tecnología OpenAI. '
             . 'Respondes en español salvo que el usuario pida otro idioma. '
-            . 'Eres preciso, útil y directo. El modelo subyacente es composer-2.5 de Cursor.';
+            . 'Eres preciso, útil y directo. El modelo subyacente es gpt-6-astra.';
     }
 }
 
-final class CursorCompletion
+final class OpenAICompletion
 {
     public function __construct(
         public readonly string $text,
@@ -128,11 +128,11 @@ final class CursorCompletion
     }
 }
 
-class CursorNotConfiguredException extends \RuntimeException
+class OpenAINotConfiguredException extends \RuntimeException
 {
 }
 
-class CursorRequestException extends \RuntimeException
+class OpenAIRequestException extends \RuntimeException
 {
     public function __construct(string $message, public readonly int $httpStatus = 0)
     {

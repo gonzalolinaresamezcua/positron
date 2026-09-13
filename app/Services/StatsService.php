@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Positrom\Services;
 
-use Positrom\Models\Payment;
 use Positrom\Models\UsageEvent;
 use Positrom\Models\User;
 use Positrom\Models\Visit;
-use Positrom\Core\Database;
 
 final class StatsService
 {
@@ -16,13 +14,6 @@ final class StatsService
     {
         $usageAll = UsageEvent::globalTotals();
         $usageMonth = UsageEvent::globalTotals(period_ym());
-        $subs = Database::fetchAll(
-            'SELECT status, COUNT(*) AS n FROM subscriptions GROUP BY status'
-        );
-        $byStatus = [];
-        foreach ($subs as $row) {
-            $byStatus[$row['status']] = (int) $row['n'];
-        }
         return [
             'visits_all' => Visit::countAll(),
             'visits_today' => Visit::countSince(date('Y-m-d 00:00:00')),
@@ -30,12 +21,7 @@ final class StatsService
             'users' => User::count(),
             'users_admin' => User::countByRole('admin'),
             'users_clients' => User::countByRole('user'),
-            'active_subs' => $byStatus['active'] ?? 0,
-            'pending_subs' => $byStatus['pending_activation'] ?? 0,
-            'past_due' => $byStatus['past_due'] ?? 0,
-            'cancelled' => $byStatus['cancelled'] ?? 0,
-            'payments_paid' => Payment::countPaid(),
-            'revenue_eur' => Payment::sumPaid(),
+            'active_users' => User::countActive(),
             'requests_all' => (int) $usageAll['requests'],
             'requests_month' => (int) $usageMonth['requests'],
             'tokens_all' => (int) $usageAll['tokens_in'] + (int) $usageAll['tokens_out'],
@@ -45,7 +31,6 @@ final class StatsService
             'usage_daily' => UsageEvent::daily(14),
             'top_paths' => Visit::topPaths(),
             'top_users' => UsageEvent::topUsers(),
-            'subs_by_status' => $byStatus,
         ];
     }
 }

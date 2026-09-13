@@ -16,52 +16,6 @@ CREATE TABLE IF NOT EXISTS users (
     KEY idx_users_role (role)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS subscriptions (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id INT UNSIGNED NOT NULL,
-    status ENUM('incomplete', 'pending_activation', 'active', 'past_due', 'cancelled', 'expired') NOT NULL DEFAULT 'incomplete',
-    mollie_customer_id VARCHAR(64) NULL,
-    mollie_mandate_id VARCHAR(64) NULL,
-    mollie_subscription_id VARCHAR(64) NULL,
-    plan_price_eur DECIMAL(10, 2) NOT NULL DEFAULT 12.00,
-    current_period_start DATE NULL,
-    current_period_end DATE NULL,
-    next_payment_date DATE NULL,
-    activated_at DATETIME NULL,
-    cancelled_at DATETIME NULL,
-    cancel_reason VARCHAR(255) NULL,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY uq_sub_user (user_id),
-    KEY idx_sub_status (status),
-    KEY idx_sub_next_pay (next_payment_date),
-    CONSTRAINT fk_sub_user FOREIGN KEY (user_id) REFERENCES users (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS payments (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id INT UNSIGNED NOT NULL,
-    subscription_id INT UNSIGNED NULL,
-    mollie_payment_id VARCHAR(64) NOT NULL,
-    amount_eur DECIMAL(10, 2) NOT NULL,
-    currency CHAR(3) NOT NULL DEFAULT 'EUR',
-    status VARCHAR(32) NOT NULL,
-    method VARCHAR(32) NULL,
-    sequence_type VARCHAR(16) NULL,
-    is_first TINYINT(1) NOT NULL DEFAULT 0,
-    paid_at DATETIME NULL,
-    raw_json JSON NULL,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY uq_pay_mollie (mollie_payment_id),
-    KEY idx_pay_user (user_id),
-    KEY idx_pay_status (status),
-    CONSTRAINT fk_pay_user FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT fk_pay_sub FOREIGN KEY (subscription_id) REFERENCES subscriptions (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE IF NOT EXISTS conversations (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
@@ -119,29 +73,6 @@ CREATE TABLE IF NOT EXISTS settings (
     setting_value TEXT NOT NULL,
     updated_at DATETIME NOT NULL,
     PRIMARY KEY (setting_key)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS email_logs (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id INT UNSIGNED NULL,
-    type VARCHAR(40) NOT NULL,
-    recipient VARCHAR(190) NOT NULL,
-    subject VARCHAR(190) NOT NULL,
-    status VARCHAR(20) NOT NULL,
-    error_text VARCHAR(255) NULL,
-    created_at DATETIME NOT NULL,
-    PRIMARY KEY (id),
-    KEY idx_email_type (type),
-    KEY idx_email_created (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS payment_reminders (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id INT UNSIGNED NOT NULL,
-    period_ym CHAR(7) NOT NULL,
-    sent_at DATETIME NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY uq_reminder (user_id, period_ym)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS rate_limits (

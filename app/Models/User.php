@@ -20,12 +20,20 @@ final class User
 
     public static function create(string $email, string $password, string $name, string $role = 'user'): int
     {
+        if ($role === 'admin' && self::countByRole('admin') > 0) {
+            throw new \RuntimeException('Solo puede existir un administrador.');
+        }
         Database::query(
             'INSERT INTO users (email, password_hash, name, role, is_active, created_at)
              VALUES (?, ?, ?, ?, 1, ?)',
             [mb_strtolower($email), password_hash($password, PASSWORD_DEFAULT), $name, $role, now()]
         );
         return (int) Database::lastId();
+    }
+
+    public static function countActive(): int
+    {
+        return (int) Database::value('SELECT COUNT(*) FROM users WHERE is_active = 1 AND role = ?', ['user']);
     }
 
     public static function updatePassword(int $id, string $password): void

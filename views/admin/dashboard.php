@@ -10,9 +10,7 @@ foreach ($stats['usage_daily'] as $d) {
 ?>
 <section class="pg-stats">
     <article class="pg-stat"><span>Visitas</span><strong><?= e((string) $stats['visits_all']) ?></strong><small>hoy <?= e((string) $stats['visits_today']) ?> · 7d <?= e((string) $stats['visits_7d']) ?></small></article>
-    <article class="pg-stat"><span>Usuarios</span><strong><?= e((string) $stats['users']) ?></strong><small><?= e((string) $stats['users_clients']) ?> clientes</small></article>
-    <article class="pg-stat"><span>Activas</span><strong><?= e((string) $stats['active_subs']) ?></strong><small><?= e((string) $stats['pending_subs']) ?> pendientes</small></article>
-    <article class="pg-stat"><span>Ingresos</span><strong><?= e(money_eur((float) $stats['revenue_eur'])) ?></strong><small><?= e((string) $stats['payments_paid']) ?> pagos</small></article>
+    <article class="pg-stat"><span>Usuarios</span><strong><?= e((string) $stats['users']) ?></strong><small><?= e((string) $stats['active_users']) ?> activos</small></article>
     <article class="pg-stat"><span>Peticiones</span><strong><?= e((string) $stats['requests_all']) ?></strong><small>mes <?= e((string) $stats['requests_month']) ?></small></article>
     <article class="pg-stat"><span>Tokens</span><strong><?= e((string) $stats['tokens_all']) ?></strong><small>mes <?= e((string) $stats['tokens_month']) ?> · <?= e(money_eur((float) $stats['usage_cost_month'])) ?></small></article>
 </section>
@@ -56,9 +54,9 @@ foreach ($stats['usage_daily'] as $d) {
         </table>
     </article>
     <article class="pg-card">
-        <h2>Clientes por gasto del mes</h2>
+        <h2>Usuarios por gasto del mes</h2>
         <table class="pg-table">
-            <thead><tr><th>Cliente</th><th>Tokens</th><th>Gasto</th></tr></thead>
+            <thead><tr><th>Usuario</th><th>Tokens</th><th>Gasto est.</th></tr></thead>
             <tbody>
             <?php foreach ($stats['top_users'] as $u): ?>
                 <tr>
@@ -71,4 +69,3 @@ foreach ($stats['usage_daily'] as $d) {
         </table>
     </article>
 </section>
-<p class="pg-muted">Presupuesto mensual por suscriptor: <?= e(money_eur((float) $budget)) ?> (el chat se detiene al agotarlo).</p>

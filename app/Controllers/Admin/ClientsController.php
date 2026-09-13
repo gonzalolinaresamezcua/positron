@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Positrom\Controllers\Admin;
 
 use Positrom\Core\View;
-use Positrom\Models\Payment;
-use Positrom\Models\Subscription;
 use Positrom\Models\User;
-use Positrom\Services\BillingService;
 use Positrom\Services\UsageLimiter;
 
 final class ClientsController
@@ -20,12 +17,11 @@ final class ClientsController
         $users = User::paginate($page, 30, $q !== '' ? $q : null);
         $enriched = [];
         foreach ($users as $u) {
-            $u['subscription'] = Subscription::forUser((int) $u['id']);
             $u['usage'] = (new UsageLimiter())->snapshot((int) $u['id']);
             $enriched[] = $u;
         }
         View::render('admin/clients', [
-            'title' => 'Clientes',
+            'title' => 'Usuarios',
             'users' => $enriched,
             'q' => $q,
             'page' => $page,
@@ -44,25 +40,8 @@ final class ClientsController
         View::render('admin/client', [
             'title' => $user['name'],
             'client' => $user,
-            'subscription' => Subscription::forUser((int) $user['id']),
-            'payments' => Payment::forUser((int) $user['id']),
             'usage' => (new UsageLimiter())->snapshot((int) $user['id']),
         ], 'layouts/admin');
-    }
-
-    public function activate(string $id): void
-    {
-        (new BillingService())->activate((int) $id, 'Activada por administración');
-        set_flash('ok', 'Suscripción activada.');
-        redirect('/admin/clientes/' . (int) $id);
-    }
-
-    public function cancel(string $id): void
-    {
-        $reason = trim((string) ($_POST['reason'] ?? 'Cancelada por administración'));
-        (new BillingService())->cancel((int) $id, $reason !== '' ? $reason : 'Cancelada por administración');
-        set_flash('ok', 'Suscripción cancelada.');
-        redirect('/admin/clientes/' . (int) $id);
     }
 
     public function toggle(string $id): void
