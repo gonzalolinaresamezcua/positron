@@ -7,7 +7,7 @@
         <p>Periodo: <?= e($subscription['current_period_start'] ?? '—') ?> → <?= e($subscription['current_period_end'] ?? '—') ?></p>
         <p>Próximo cobro: <?= e($subscription['next_payment_date'] ?? '—') ?></p>
         <?php if (($subscription['status'] ?? '') === 'active'): ?>
-            <form method="post" action="/cuenta/cancelar" onsubmit="return confirm('¿Cancelar la suscripción POSITRON?');">
+            <form method="post" action="/cuenta/cancelar" onsubmit="return confirm('¿Cancelar la suscripción POSITROM?');">
                 <?= csrf_field() ?>
                 <button class="pg-btn pg-btn-ghost" type="submit">Cancelar suscripción</button>
             </form>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Positron\Core;
+namespace Positrom\Core;
 
 final class Config
 {
@@ -12,7 +12,7 @@ final class Config
     public static function boot(): void
     {
         self::$items = [
-            'app.name' => Env::get('APP_NAME', 'POSITRON'),
+            'app.name' => Env::get('APP_NAME', 'POSITROM'),
             'app.env' => Env::get('APP_ENV', 'production'),
             'app.debug' => Env::get('APP_DEBUG', '0') === '1',
             'app.url' => rtrim((string) Env::get('APP_URL', ''), '/'),
@@ -20,7 +20,7 @@ final class Config
             'app.locale' => Env::get('APP_LOCALE', 'es'),
             'db.host' => Env::get('DB_HOST', 'localhost'),
             'db.port' => Env::get('DB_PORT', '3306'),
-            'db.name' => Env::get('DB_NAME', 'positron'),
+            'db.name' => Env::get('DB_NAME', 'positrom'),
             'db.user' => Env::get('DB_USER', ''),
             'db.pass' => Env::get('DB_PASS', ''),
             'mollie.key' => Env::get('MOLLIE_API_KEY', ''),
@@ -42,9 +42,9 @@ final class Config
             'smtp.user' => Env::get('SMTP_USER', ''),
             'smtp.pass' => Env::get('SMTP_PASS', ''),
             'smtp.from' => Env::get('SMTP_FROM', ''),
-            'smtp.from_name' => Env::get('SMTP_FROM_NAME', 'POSITRON'),
+            'smtp.from_name' => Env::get('SMTP_FROM_NAME', 'POSITROM'),
             'smtp.encryption' => Env::get('SMTP_ENCRYPTION', 'tls'),
-            'session.name' => Env::get('SESSION_NAME', 'positron_sess'),
+            'session.name' => Env::get('SESSION_NAME', 'positrom_sess'),
             'chat.rate' => (int) Env::get('CHAT_RATE_PER_MINUTE', '30'),
         ];
     }

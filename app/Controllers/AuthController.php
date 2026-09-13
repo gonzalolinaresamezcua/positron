@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers;
+namespace Positrom\Controllers;
 
-use Positron\Core\Auth;
-use Positron\Core\Session;
-use Positron\Core\Validator;
-use Positron\Core\View;
-use Positron\Models\Subscription;
-use Positron\Models\User;
-use Positron\Services\BillingService;
+use Positrom\Core\Auth;
+use Positrom\Core\Session;
+use Positrom\Core\Validator;
+use Positrom\Core\View;
+use Positrom\Models\Subscription;
+use Positrom\Models\User;
+use Positrom\Services\BillingService;
 
 final class AuthController
 {

@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e(($title ?? 'POSITRON') . ' · POSITRON') ?></title>
-    <meta name="description" content="POSITRON: chat de IA con suscripción mensual de 12 €. Un plan. Modelo composer-2.5.">
+    <title><?= e(($title ?? 'POSITROM') . ' · POSITROM') ?></title>
+    <meta name="description" content="POSITROM: chat de IA con suscripción mensual de 12 €. Un plan. Modelo composer-2.5.">
     <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-    <meta property="og:title" content="POSITRON">
+    <meta property="og:title" content="POSITROM">
     <meta property="og:description" content="Chat de IA en órbita. 12 € al mes.">
-    <meta property="og:image" content="<?= e(url('/assets/img/logo-positron.png')) ?>">
-    <link rel="stylesheet" href="/assets/css/positron-galactico.css">
+    <meta property="og:image" content="<?= e(url('/assets/img/logo-positrom.png')) ?>">
+    <link rel="stylesheet" href="/assets/css/positrom-galactico.css">
 </head>
 <body class="pg-body">
     <div class="pg-stars" aria-hidden="true"></div>
     <div class="pg-nebula" aria-hidden="true"></div>
     <header class="pg-nav">
         <a class="pg-brand" href="/">
-            <img src="/assets/img/logo-positron.svg" alt="" width="36" height="36">
-            <span>POSITRON</span>
+            <img src="/assets/img/logo-positrom.svg" alt="" width="36" height="36">
+            <span>POSITROM</span>
         </a>
         <nav class="pg-nav-links">
             <a href="/#orbita">El plan</a>
@@ -33,12 +33,12 @@
         </nav>
     </header>
     <main>
-        <?php require POSITRON_VIEWS . '/partials/flash.php'; ?>
+        <?php require POSITROM_VIEWS . '/partials/flash.php'; ?>
         <?= $content ?? '' ?>
     </main>
     <footer class="pg-foot">
         <div>
-            <strong>POSITRON</strong>
+            <strong>POSITROM</strong>
             <span>Chat de IA · 12 €/mes · rayo gamma</span>
         </div>
         <nav>

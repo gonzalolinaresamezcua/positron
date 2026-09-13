@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Positron\Http;
+namespace Positrom\Http;
 
 interface HttpTransport
 {

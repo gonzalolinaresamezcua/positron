@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers\Admin;
+namespace Positrom\Controllers\Admin;
 
-use Positron\Core\View;
-use Positron\Services\StatsService;
-use Positron\Services\UsageLimiter;
+use Positrom\Core\View;
+use Positrom\Services\StatsService;
+use Positrom\Services\UsageLimiter;
 
 final class DashboardController
 {
     public function index(): void
     {
         View::render('admin/dashboard', [
-            'title' => 'Panel POSITRON',
+            'title' => 'Panel POSITROM',
             'stats' => (new StatsService())->dashboard(),
             'limiter' => (new UsageLimiter())->snapshot(0),
             'budget' => (new UsageLimiter())->budgetEur(),

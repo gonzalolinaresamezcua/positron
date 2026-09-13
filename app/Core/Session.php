@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Positron\Core;
+namespace Positrom\Core;
 
 final class Session
 {
@@ -13,7 +13,7 @@ final class Session
         }
         $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
             || ((int) ($_SERVER['SERVER_PORT'] ?? 0) === 443);
-        session_name((string) Config::get('session.name', 'positron_sess'));
+        session_name((string) Config::get('session.name', 'positrom_sess'));
         session_set_cookie_params([
             'lifetime' => 0,
             'path' => '/',

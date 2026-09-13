@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers;
+namespace Positrom\Controllers;
 
-use Positron\Core\Auth;
-use Positron\Core\View;
-use Positron\Models\Subscription;
-use Positron\Services\BillingService;
-use Positron\Services\MollieNotConfiguredException;
+use Positrom\Core\Auth;
+use Positrom\Core\View;
+use Positrom\Models\Subscription;
+use Positrom\Services\BillingService;
+use Positrom\Services\MollieNotConfiguredException;
 
 final class CheckoutController
 {
@@ -17,7 +17,7 @@ final class CheckoutController
         $user = Auth::requireUser();
         $sub = Subscription::forUser((int) $user['id']);
         View::render('checkout/index', [
-            'title' => 'Activar POSITRON',
+            'title' => 'Activar POSITROM',
             'user' => $user,
             'subscription' => $sub,
             'price' => (new BillingService())->planPrice(),

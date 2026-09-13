@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Positron\Tests;
+namespace Positrom\Tests;
 
-use Positron\Http\HttpResponse;
-use Positron\Http\HttpTransport;
+use Positrom\Http\HttpResponse;
+use Positrom\Http\HttpTransport;
 
 final class FakeTransport implements HttpTransport
 {

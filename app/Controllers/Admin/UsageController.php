@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers\Admin;
+namespace Positrom\Controllers\Admin;
 
-use Positron\Core\View;
-use Positron\Models\UsageEvent;
-use Positron\Services\UsageLimiter;
+use Positrom\Core\View;
+use Positrom\Models\UsageEvent;
+use Positrom\Services\UsageLimiter;
 
 final class UsageController
 {

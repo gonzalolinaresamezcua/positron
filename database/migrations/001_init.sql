@@ -1,3 +1,3 @@
--- Migración inicial POSITRON.
+-- Migración inicial POSITROM.
 -- En una base vacía importa ../../schema.sql y después ../../seed.sql
 -- (el cliente mysql de Plesk no resuelve bien SOURCE con rutas relativas).

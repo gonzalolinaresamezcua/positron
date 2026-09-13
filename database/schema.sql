@@ -1,4 +1,4 @@
--- POSITRON schema — MySQL 8 / MariaDB 10.5+
+-- POSITROM schema — MySQL 8 / MariaDB 10.5+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 

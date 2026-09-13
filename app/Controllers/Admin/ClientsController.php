@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers\Admin;
+namespace Positrom\Controllers\Admin;
 
-use Positron\Core\View;
-use Positron\Models\Payment;
-use Positron\Models\Subscription;
-use Positron\Models\User;
-use Positron\Services\BillingService;
-use Positron\Services\UsageLimiter;
+use Positrom\Core\View;
+use Positrom\Models\Payment;
+use Positrom\Models\Subscription;
+use Positrom\Models\User;
+use Positrom\Services\BillingService;
+use Positrom\Services\UsageLimiter;
 
 final class ClientsController
 {

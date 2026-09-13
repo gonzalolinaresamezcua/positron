@@ -1,8 +1,8 @@
-# POSITRON
+# POSITROM
 
-Producto PHP 8 + MySQL para vender **POSITRON**: un chat de IA de suscripción, un solo plan (**12 €/mes**), interfaz en español, listo para Plesk.
+Producto PHP 8 + MySQL para vender **POSITROM**: un chat de IA de suscripción, un solo plan (**12 €/mes**), interfaz en español, listo para Plesk.
 
-El marco visual es **Positron Galáctico** (verdes y azules, estética galáctica, movimiento propio; no es un restyle de Bootstrap). El emblema es un **rayo de luz gamma** / positrón en SVG.
+El marco visual es **Positrom Galáctico** (verdes y azules, estética galáctica, movimiento propio; no es un restyle de Bootstrap). El emblema es un **rayo de luz gamma** / positrom en SVG.
 
 ## Qué incluye
 
@@ -30,10 +30,10 @@ Composer **no es obligatorio**. El autoload va en `app/Autoloader.php`.
 3. Selecciona **PHP 8.2 u 8.3** (FPM o FastCGI).
 4. Crea una base de datos MySQL y un usuario con privilegios sobre ella.
 5. Copia `.env.example` a `.env` en la raíz del repo (un nivel por encima de `public/`).
-6. Rellena `APP_URL` (https del dominio), `APP_KEY` (cadena larga aleatoria), datos `DB_*`, y deja placeholders de Mollie/Cursor/SMTP hasta tener claves reales.
+6. Rellena `APP_URL` (`https://positrom.com`), `APP_KEY` (cadena larga aleatoria), datos `DB_*`, y deja placeholders de Mollie/Cursor/SMTP hasta tener claves reales.
 7. Importa `database/schema.sql` y `database/seed.sql` (phpMyAdmin o `mysql < archivo`).
 8. Permisos: `storage/` y `.env` escribibles por el usuario del dominio (`chmod 600 .env`). El admin escribe `.env` de forma segura.
-9. Webhook Mollie: `https://TU-DOMINIO/webhooks/mollie` (POST, sin CSRF).
+9. Webhook Mollie: `https://positrom.com/webhooks/mollie` (POST, sin CSRF).
 10. Tareas programadas: ver `deploy/plesk-cron.example`. Mínimo diario:
     - `cron/payment-reminders.php` (recordatorio de cobro)
     - opcional `cron/subscription-sync.php`
@@ -48,7 +48,7 @@ Si el docroot apunta por error a la raíz del repo, el `.htaccess` de la raíz r
 cp .env.example .env
 # edita DB_* y APP_URL=http://127.0.0.1:8080
 mysql -u root < database/schema.sql
-mysql -u root positron < database/seed.sql
+mysql -u root positrom < database/seed.sql
 php -S 127.0.0.1:8080 -t public public/router.php
 ```
 
@@ -62,8 +62,8 @@ php scripts/verify.php
 
 Documentado **solo aquí**, no en la interfaz:
 
-- Correo: `admin@positron.local`
-- Contraseña: `Positron#Admin2026`
+- Correo: `admin@positrom.local`
+- Contraseña: `Positrom#Admin2026`
 
 Cámbiala tras el primer acceso.
 
@@ -79,7 +79,7 @@ Sin `MOLLIE_API_KEY` real el checkout muestra un error claro (placeholders `test
 
 ## Chat / Cursor
 
-El cliente `Positron\Services\CursorClient` llama a:
+El cliente `Positrom\Services\CursorClient` llama a:
 
 `POST {CURSOR_API_BASE}{CURSOR_CHAT_PATH}`
 

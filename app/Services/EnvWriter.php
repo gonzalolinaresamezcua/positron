@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Positron\Services;
+namespace Positrom\Services;
 
-use Positron\Core\Config;
-use Positron\Core\Env;
+use Positrom\Core\Config;
+use Positrom\Core\Env;
 
 final class EnvWriter
 {
@@ -45,7 +45,7 @@ final class EnvWriter
 
     public static function path(): string
     {
-        return POSITRON_ROOT . '/.env';
+        return POSITROM_ROOT . '/.env';
     }
 
     /**

@@ -31,7 +31,7 @@
         </div>
         <form class="pg-chat-form" id="chat-form" data-conversation="<?= e((string) ($current['id'] ?? '')) ?>">
             <?= csrf_field() ?>
-            <textarea class="pg-input" name="message" id="chat-input" rows="2" required maxlength="8000" placeholder="Pregunta a POSITRON…" <?= $usage['exhausted'] ? 'disabled' : '' ?>></textarea>
+            <textarea class="pg-input" name="message" id="chat-input" rows="2" required maxlength="8000" placeholder="Pregunta a POSITROM…" <?= $usage['exhausted'] ? 'disabled' : '' ?>></textarea>
             <button class="pg-btn pg-btn-ion" type="submit" <?= $usage['exhausted'] ? 'disabled' : '' ?>>Enviar</button>
         </form>
     </div>

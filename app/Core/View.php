@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Positron\Core;
+namespace Positrom\Core;
 
 final class View
 {
@@ -21,7 +21,7 @@ final class View
     /** @param array<string, mixed> $data */
     public static function capture(string $template, array $data = []): string
     {
-        $file = POSITRON_VIEWS . '/' . $template . '.php';
+        $file = POSITROM_VIEWS . '/' . $template . '.php';
         if (!is_file($file)) {
             throw new \RuntimeException('Vista no encontrada: ' . $template);
         }

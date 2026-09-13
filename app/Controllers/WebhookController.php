@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers;
+namespace Positrom\Controllers;
 
-use Positron\Services\BillingService;
+use Positrom\Services\BillingService;
 
 final class WebhookController
 {
@@ -20,7 +20,7 @@ final class WebhookController
             (new BillingService())->handleWebhook($id);
         } catch (\Throwable $e) {
             @file_put_contents(
-                POSITRON_STORAGE . '/logs/mollie-webhook.log',
+                POSITROM_STORAGE . '/logs/mollie-webhook.log',
                 '[' . now() . '] ' . $e->getMessage() . PHP_EOL,
                 FILE_APPEND
             );

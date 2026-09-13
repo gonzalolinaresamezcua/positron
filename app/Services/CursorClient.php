@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Positron\Services;
+namespace Positrom\Services;
 
-use Positron\Core\Config;
-use Positron\Http\CurlTransport;
-use Positron\Http\HttpTransport;
-use Positron\Models\Setting;
+use Positrom\Core\Config;
+use Positrom\Http\CurlTransport;
+use Positrom\Http\HttpTransport;
+use Positrom\Models\Setting;
 
 final class CursorClient
 {
@@ -110,7 +110,7 @@ final class CursorClient
 
     public static function systemPrompt(): string
     {
-        return 'Eres POSITRON, un asistente de IA de la suscripción POSITRON. '
+        return 'Eres POSITROM, un asistente de IA de la suscripción POSITROM. '
             . 'Respondes en español salvo que el usuario pida otro idioma. '
             . 'Eres preciso, útil y directo. El modelo subyacente es composer-2.5 de Cursor.';
     }

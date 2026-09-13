@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Positron\Core;
+namespace Positrom\Core;
 
 final class Env
 {

@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-use Positron\Core\Config;
-use Positron\Core\Csrf;
-use Positron\Core\Database;
-use Positron\Core\Router;
-use Positron\Core\Session;
-use Positron\Core\Validator;
-use Positron\Models\Setting;
-use Positron\Models\Subscription;
-use Positron\Models\UsageEvent;
-use Positron\Models\User;
-use Positron\Services\CursorClient;
-use Positron\Services\EnvWriter;
-use Positron\Services\MollieClient;
-use Positron\Services\UsageLimiter;
-use Positron\Tests\FakeTransport;
+use Positrom\Core\Config;
+use Positrom\Core\Csrf;
+use Positrom\Core\Database;
+use Positrom\Core\Router;
+use Positrom\Core\Session;
+use Positrom\Core\Validator;
+use Positrom\Models\Setting;
+use Positrom\Models\Subscription;
+use Positrom\Models\UsageEvent;
+use Positrom\Models\User;
+use Positrom\Services\CursorClient;
+use Positrom\Services\EnvWriter;
+use Positrom\Services\MollieClient;
+use Positrom\Services\UsageLimiter;
+use Positrom\Tests\FakeTransport;
 
 $root = dirname(__DIR__);
 $envPath = $root . '/.env';
@@ -60,8 +60,8 @@ foreach ($iterator as $file) {
 }
 
 echo "== Unit ==\n";
-$hash = password_hash('Positron#Admin2026', PASSWORD_DEFAULT);
-expect(is_string($hash) && password_verify('Positron#Admin2026', $hash), 'password_hash / verify');
+$hash = password_hash('Positrom#Admin2026', PASSWORD_DEFAULT);
+expect(is_string($hash) && password_verify('Positrom#Admin2026', $hash), 'password_hash / verify');
 expect(!password_verify('otra', $hash), 'password_verify rechaza otra clave');
 
 $_SESSION = [];
@@ -74,7 +74,7 @@ expect(!Csrf::verify($token . 'x'), 'CSRF rechaza token falso');
 $v = new Validator(['email' => 'mal', 'name' => '']);
 $v->required('name', 'El nombre')->email('email', 'El correo');
 expect(!$v->ok() && str_contains($v->first(), 'nombre'), 'validador required');
-$v2 = new Validator(['email' => 'ok@positron.local', 'name' => 'Ada']);
+$v2 = new Validator(['email' => 'ok@positrom.local', 'name' => 'Ada']);
 $v2->required('name', 'El nombre')->email('email', 'El correo');
 expect($v2->ok(), 'validador email correcto');
 
@@ -108,15 +108,15 @@ try {
 $tables = Database::fetchAll('SHOW TABLES');
 expect(count($tables) >= 8, 'tablas creadas');
 
-$admin = User::findByEmail('admin@positron.local');
+$admin = User::findByEmail('admin@positrom.local');
 expect($admin !== null && $admin['role'] === 'admin', 'admin semilla');
-expect($admin !== null && password_verify('Positron#Admin2026', $admin['password_hash']), 'hash admin documentado');
+expect($admin !== null && password_verify('Positrom#Admin2026', $admin['password_hash']), 'hash admin documentado');
 
 $limiter = new UsageLimiter();
 expect($limiter->budgetEur() > 0, 'presupuesto mensual configurado');
 expect($limiter->estimateCost(1_000_000, 1_000_000) > 0, 'coste de 1M+1M tokens > 0');
 
-$email = 'cliente.prueba+' . bin2hex(random_bytes(3)) . '@positron.local';
+$email = 'cliente.prueba+' . bin2hex(random_bytes(3)) . '@positrom.local';
 $uid = User::create($email, 'ClaveSegura#99', 'Cliente Prueba');
 Subscription::createForUser($uid, 12.00);
 UsageEvent::record($uid, null, 'composer-2.5', 100, 50, 0.01);
@@ -130,20 +130,20 @@ expect($snap2['exhausted'] === true, 'agotado al superar presupuesto');
 $blocked = false;
 try {
     $limiter->assertCanSpend($uid);
-} catch (\Positron\Services\UsageExhaustedException) {
+} catch (\Positrom\Services\UsageExhaustedException) {
     $blocked = true;
 }
 expect($blocked, 'assertCanSpend lanza al agotar');
 
 $envBackup = file_get_contents($envPath);
-$written = EnvWriter::update(['APP_URL' => 'https://positron.test']);
+$written = EnvWriter::update(['APP_URL' => 'https://positrom.test']);
 expect(in_array('APP_URL', $written, true), 'EnvWriter permite APP_URL');
 $after = file_get_contents($envPath);
-expect(is_string($after) && str_contains($after, 'APP_URL=https://positron.test'), 'EnvWriter persiste');
+expect(is_string($after) && str_contains($after, 'APP_URL=https://positrom.test'), 'EnvWriter persiste');
 $blockedKeys = EnvWriter::update(['NOT_ALLOWED' => 'x']);
 expect($blockedKeys === [], 'EnvWriter ignora claves no listadas');
 file_put_contents($envPath, (string) $envBackup);
-\Positron\Core\Env::reload($envPath);
+\Positrom\Core\Env::reload($envPath);
 Config::boot();
 
 $mollie2 = new MollieClient(new FakeTransport(200, ['id' => 'tr_demo']));
@@ -189,7 +189,7 @@ if (!is_resource($proc)) {
         usleep(150000);
         $ctx = stream_context_create(['http' => ['timeout' => 1, 'ignore_errors' => true]]);
         $hit = @file_get_contents("http://{$host}:{$port}/salud", false, $ctx);
-        if (is_string($hit) && str_contains($hit, 'POSITRON')) {
+        if (is_string($hit) && str_contains($hit, 'POSITROM')) {
             $ready = true;
             break;
         }
@@ -197,9 +197,9 @@ if (!is_resource($proc)) {
     expect($ready, 'GET /salud');
 
     $home = @file_get_contents("http://{$host}:{$port}/", false, stream_context_create(['http' => ['timeout' => 3, 'ignore_errors' => true]]));
-    expect(is_string($home) && str_contains($home, 'POSITRON') && str_contains($home, '12'), 'GET / marketing');
-    expect(is_string($home) && str_contains($home, 'positron-galactico.css'), 'CSS Positron Galáctico');
-    expect(is_string($home) && str_contains($home, 'logo-positron.svg'), 'logo SVG');
+    expect(is_string($home) && str_contains($home, 'POSITROM') && str_contains($home, '12'), 'GET / marketing');
+    expect(is_string($home) && str_contains($home, 'positrom-galactico.css'), 'CSS Positrom Galáctico');
+    expect(is_string($home) && str_contains($home, 'logo-positrom.svg'), 'logo SVG');
 
     $login = @file_get_contents("http://{$host}:{$port}/acceso", false, stream_context_create(['http' => ['timeout' => 3, 'ignore_errors' => true]]));
     expect(is_string($login) && str_contains($login, 'name="password"'), 'GET /acceso');
@@ -217,10 +217,10 @@ if (!is_resource($proc)) {
     $redir = implode("\n", $headers);
     expect(str_contains($redir, '302') || str_contains($redir, '419'), 'GET /admin exige login');
 
-    $css = @file_get_contents("http://{$host}:{$port}/assets/css/positron-galactico.css", false, stream_context_create(['http' => ['timeout' => 3]]));
+    $css = @file_get_contents("http://{$host}:{$port}/assets/css/positrom-galactico.css", false, stream_context_create(['http' => ['timeout' => 3]]));
     expect(is_string($css) && str_contains($css, '--pg-ion') && str_contains($css, '.pg-orbit'), 'framework CSS propio');
 
-    $svg = @file_get_contents("http://{$host}:{$port}/assets/img/logo-positron.svg", false, stream_context_create(['http' => ['timeout' => 3]]));
+    $svg = @file_get_contents("http://{$host}:{$port}/assets/img/logo-positrom.svg", false, stream_context_create(['http' => ['timeout' => 3]]));
     expect(is_string($svg) && str_contains($svg, '<svg'), 'logo SVG servido');
 
     proc_terminate($proc);

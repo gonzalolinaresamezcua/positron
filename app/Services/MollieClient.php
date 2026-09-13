@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Positron\Services;
+namespace Positrom\Services;
 
-use Positron\Core\Config;
-use Positron\Http\CurlTransport;
-use Positron\Http\HttpTransport;
+use Positrom\Core\Config;
+use Positrom\Http\CurlTransport;
+use Positrom\Http\HttpTransport;
 
 final class MollieClient
 {

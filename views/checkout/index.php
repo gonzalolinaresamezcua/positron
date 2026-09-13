@@ -1,6 +1,6 @@
 <section class="pg-split">
     <article class="pg-card">
-        <h1>Activar POSITRON</h1>
+        <h1>Activar POSITROM</h1>
         <p>Plan único: <strong><?= e(money_eur((float) $price)) ?></strong> al mes. El primer pago crea el mandato de Mollie y cubre el mes en curso. Los siguientes cobros son automáticos.</p>
         <?php if (($subscription['status'] ?? '') === 'active'): ?>
             <p class="pg-banner pg-banner-ok">Tu suscripción ya está activa.</p>

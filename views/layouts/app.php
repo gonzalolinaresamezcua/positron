@@ -3,17 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e(($title ?? 'POSITRON') . ' · POSITRON') ?></title>
+    <title><?= e(($title ?? 'POSITROM') . ' · POSITROM') ?></title>
     <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/assets/css/positron-galactico.css">
+    <link rel="stylesheet" href="/assets/css/positrom-galactico.css">
     <meta name="csrf-token" content="<?= e(csrf_token()) ?>">
 </head>
 <body class="pg-body pg-body-app">
     <div class="pg-stars pg-stars-dim" aria-hidden="true"></div>
     <header class="pg-nav">
         <a class="pg-brand" href="/">
-            <img src="/assets/img/logo-positron.svg" alt="" width="32" height="32">
-            <span>POSITRON</span>
+            <img src="/assets/img/logo-positrom.svg" alt="" width="32" height="32">
+            <span>POSITROM</span>
         </a>
         <nav class="pg-nav-links">
             <a href="/chat">Chat</a>
@@ -27,7 +27,7 @@
         </nav>
     </header>
     <main class="pg-app-main">
-        <?php require POSITRON_VIEWS . '/partials/flash.php'; ?>
+        <?php require POSITROM_VIEWS . '/partials/flash.php'; ?>
         <?= $content ?? '' ?>
     </main>
     <script src="/assets/js/app.js" defer></script>

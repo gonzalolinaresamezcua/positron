@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Positron\Core;
+namespace Positrom\Core;
 
-use Positron\Models\User;
+use Positrom\Models\User;
 
 final class Auth
 {

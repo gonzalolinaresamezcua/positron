@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers;
+namespace Positrom\Controllers;
 
-use Positron\Core\View;
-use Positron\Services\UsageLimiter;
+use Positrom\Core\View;
+use Positrom\Services\UsageLimiter;
 
 final class HomeController
 {
@@ -13,7 +13,7 @@ final class HomeController
     {
         $limiter = new UsageLimiter();
         View::render('public/home', [
-            'title' => 'POSITRON — chat de IA en órbita',
+            'title' => 'POSITROM — chat de IA en órbita',
             'price' => $limiter->budgetEur() > 0 ? $limiter->budgetEur() : 12.0,
         ], 'layouts/public');
     }
@@ -30,6 +30,6 @@ final class HomeController
 
     public function salud(): void
     {
-        json_response(['ok' => true, 'app' => 'POSITRON', 'time' => now()]);
+        json_response(['ok' => true, 'app' => 'POSITROM', 'time' => now()]);
     }
 }

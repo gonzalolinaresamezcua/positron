@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers\Admin;
+namespace Positrom\Controllers\Admin;
 
-use Positron\Core\Config;
-use Positron\Core\Env;
-use Positron\Core\Validator;
-use Positron\Core\View;
-use Positron\Models\Setting;
-use Positron\Services\EnvWriter;
+use Positrom\Core\Config;
+use Positrom\Core\Env;
+use Positrom\Core\Validator;
+use Positrom\Core\View;
+use Positrom\Models\Setting;
+use Positrom\Services\EnvWriter;
 
 final class SettingsController
 {
@@ -28,7 +28,7 @@ final class SettingsController
                 'SMTP_USER' => Env::get('SMTP_USER', ''),
                 'SMTP_PASS' => Env::get('SMTP_PASS', ''),
                 'SMTP_FROM' => Env::get('SMTP_FROM', ''),
-                'SMTP_FROM_NAME' => Env::get('SMTP_FROM_NAME', 'POSITRON'),
+                'SMTP_FROM_NAME' => Env::get('SMTP_FROM_NAME', 'POSITROM'),
                 'SMTP_ENCRYPTION' => Env::get('SMTP_ENCRYPTION', 'tls'),
                 'APP_URL' => Env::get('APP_URL', ''),
             ],
@@ -51,7 +51,7 @@ final class SettingsController
             'SMTP_USER' => (string) ($_POST['SMTP_USER'] ?? ''),
             'SMTP_PASS' => (string) ($_POST['SMTP_PASS'] ?? ''),
             'SMTP_FROM' => (string) ($_POST['SMTP_FROM'] ?? ''),
-            'SMTP_FROM_NAME' => (string) ($_POST['SMTP_FROM_NAME'] ?? 'POSITRON'),
+            'SMTP_FROM_NAME' => (string) ($_POST['SMTP_FROM_NAME'] ?? 'POSITROM'),
             'SMTP_ENCRYPTION' => (string) ($_POST['SMTP_ENCRYPTION'] ?? 'tls'),
             'APP_URL' => (string) ($_POST['APP_URL'] ?? ''),
         ];

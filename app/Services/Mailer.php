@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Positron\Services;
+namespace Positrom\Services;
 
-use Positron\Core\Config;
-use Positron\Models\EmailLog;
+use Positrom\Core\Config;
+use Positrom\Models\EmailLog;
 
 final class Mailer
 {
@@ -37,13 +37,13 @@ final class Mailer
     {
         $when = $sub['next_payment_date'] ?? 'próximamente';
         $html = $this->wrap(
-            'Recordatorio de cobro POSITRON',
+            'Recordatorio de cobro POSITROM',
             '<p>Hola ' . e($user['name']) . ',</p>
-            <p>Te recordamos que tu suscripción POSITRON (12 €/mes) se renovará el <strong>' . e((string) $when) . '</strong>.</p>
+            <p>Te recordamos que tu suscripción POSITROM (12 €/mes) se renovará el <strong>' . e((string) $when) . '</strong>.</p>
             <p>Si el cargo no se completa, el acceso al chat se pausará hasta regularizar el pago.</p>
             <p><a href="' . e(url('/cuenta')) . '">Ver tu cuenta</a></p>'
         );
-        return $this->send($user['email'], 'POSITRON: recordatorio de cobro mensual', $html, 'payment_reminder', (int) $user['id']);
+        return $this->send($user['email'], 'POSITROM: recordatorio de cobro mensual', $html, 'payment_reminder', (int) $user['id']);
     }
 
     public function paymentReceived(array $user, string $amount): bool
@@ -51,9 +51,9 @@ final class Mailer
         $html = $this->wrap(
             'Pago recibido',
             '<p>Hola ' . e($user['name']) . ',</p>
-            <p>Hemos registrado un pago de <strong>' . e($amount) . '</strong> a tu suscripción POSITRON.</p>'
+            <p>Hemos registrado un pago de <strong>' . e($amount) . '</strong> a tu suscripción POSITROM.</p>'
         );
-        return $this->send($user['email'], 'POSITRON: pago recibido', $html, 'payment_received', (int) $user['id']);
+        return $this->send($user['email'], 'POSITROM: pago recibido', $html, 'payment_received', (int) $user['id']);
     }
 
     public function subscriptionActivated(array $user): bool
@@ -61,10 +61,10 @@ final class Mailer
         $html = $this->wrap(
             'Suscripción activa',
             '<p>Hola ' . e($user['name']) . ',</p>
-            <p>Tu órbita POSITRON está activa. Ya puedes hablar con el modelo composer-2.5.</p>
+            <p>Tu órbita POSITROM está activa. Ya puedes hablar con el modelo composer-2.5.</p>
             <p><a href="' . e(url('/chat')) . '">Abrir el chat</a></p>'
         );
-        return $this->send($user['email'], 'POSITRON: suscripción activada', $html, 'activated', (int) $user['id']);
+        return $this->send($user['email'], 'POSITROM: suscripción activada', $html, 'activated', (int) $user['id']);
     }
 
     private function wrap(string $title, string $inner): string
@@ -73,7 +73,7 @@ final class Mailer
         <div style="max-width:560px;margin:auto;background:#0a1a33;border:1px solid #1a6bff;padding:24px;border-radius:16px">
         <h1 style="color:#00ff9c;font-size:20px">' . e($title) . '</h1>
         ' . $inner . '
-        <p style="color:#7aa0b8;font-size:12px;margin-top:24px">POSITRON · suscripción 12 €/mes</p>
+        <p style="color:#7aa0b8;font-size:12px;margin-top:24px">POSITROM · suscripción 12 €/mes</p>
         </div></body></html>';
     }
 
@@ -85,7 +85,7 @@ final class Mailer
         $user = (string) Config::get('smtp.user');
         $pass = (string) Config::get('smtp.pass');
         $from = (string) Config::get('smtp.from');
-        $fromName = (string) Config::get('smtp.from_name', 'POSITRON');
+        $fromName = (string) Config::get('smtp.from_name', 'POSITROM');
 
         $remote = ($enc === 'ssl' ? 'ssl://' : '') . $host . ':' . $port;
         $fp = @stream_socket_client($remote, $errno, $errstr, 20);
@@ -94,13 +94,13 @@ final class Mailer
         }
         stream_set_timeout($fp, 20);
         $this->expect($fp, 220);
-        $this->cmd($fp, 'EHLO positron.local', 250);
+        $this->cmd($fp, 'EHLO positrom.local', 250);
         if ($enc === 'tls') {
             $this->cmd($fp, 'STARTTLS', 220);
             if (!stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
                 throw new \RuntimeException('No se pudo iniciar TLS SMTP.');
             }
-            $this->cmd($fp, 'EHLO positron.local', 250);
+            $this->cmd($fp, 'EHLO positrom.local', 250);
         }
         if ($user !== '') {
             $this->cmd($fp, 'AUTH LOGIN', 334);
@@ -153,7 +153,7 @@ final class Mailer
 
     private function logFallback(string $to, string $subject, string $html): void
     {
-        $file = POSITRON_STORAGE . '/logs/mail-' . date('Y-m') . '.log';
+        $file = POSITROM_STORAGE . '/logs/mail-' . date('Y-m') . '.log';
         $entry = '[' . now() . '] to=' . $to . ' subject=' . $subject . PHP_EOL;
         @file_put_contents($file, $entry, FILE_APPEND);
         unset($html);

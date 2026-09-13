@@ -1,7 +1,7 @@
 <section class="pg-hero">
     <div class="pg-hero-copy">
         <p class="pg-kicker">Rayo gamma · un solo plan</p>
-        <h1>POSITRON entra en órbita.<br>Chat de IA a <em>12 €/mes</em>.</h1>
+        <h1>POSITROM entra en órbita.<br>Chat de IA a <em>12 €/mes</em>.</h1>
         <p class="pg-lead">Un modelo. Una cuota. Acceso al chat con <strong>composer-2.5</strong> de Cursor, con tope de tokens atado al precio del plan.</p>
         <div class="pg-hero-actions">
             <a class="pg-btn pg-btn-ion pg-btn-lg" href="/registro">Activar suscripción</a>
@@ -12,7 +12,7 @@
         <div class="pg-orbit pg-orbit-a"></div>
         <div class="pg-orbit pg-orbit-b"></div>
         <div class="pg-ray"></div>
-        <img class="pg-hero-logo" src="/assets/img/logo-positron.svg" alt="">
+        <img class="pg-hero-logo" src="/assets/img/logo-positrom.svg" alt="">
     </div>
 </section>
 
@@ -36,7 +36,7 @@
 <section class="pg-section pg-grid-3" id="como">
     <article class="pg-card">
         <h3>1. Cuenta</h3>
-        <p>Regístrate en español, sin planes escondidos. Un único producto: POSITRON.</p>
+        <p>Regístrate en español, sin planes escondidos. Un único producto: POSITROM.</p>
     </article>
     <article class="pg-card">
         <h3>2. Mandato Mollie</h3>

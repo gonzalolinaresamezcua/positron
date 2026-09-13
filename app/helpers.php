@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Positron\Core\Auth;
-use Positron\Core\Config;
-use Positron\Core\Csrf;
-use Positron\Core\Session;
-use Positron\Models\Setting;
+use Positrom\Core\Auth;
+use Positrom\Core\Config;
+use Positrom\Core\Csrf;
+use Positrom\Core\Session;
+use Positrom\Models\Setting;
 
 function e(?string $value): string
 {

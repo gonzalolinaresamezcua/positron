@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e(($title ?? 'Admin') . ' · Admin POSITRON') ?></title>
+    <title><?= e(($title ?? 'Admin') . ' · Admin POSITROM') ?></title>
     <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/assets/css/positron-galactico.css">
+    <link rel="stylesheet" href="/assets/css/positrom-galactico.css">
     <meta name="csrf-token" content="<?= e(csrf_token()) ?>">
 </head>
 <body class="pg-body pg-body-admin">
     <aside class="pg-side">
         <a class="pg-brand" href="/admin">
-            <img src="/assets/img/logo-positron.svg" alt="" width="32" height="32">
-            <span>POSITRON</span>
+            <img src="/assets/img/logo-positrom.svg" alt="" width="32" height="32">
+            <span>POSITROM</span>
         </a>
         <nav>
             <a href="/admin">Panel</a>
@@ -33,7 +33,7 @@
             <h1><?= e($title ?? 'Admin') ?></h1>
             <span class="pg-pill">12 € / mes</span>
         </header>
-        <?php require POSITRON_VIEWS . '/partials/flash.php'; ?>
+        <?php require POSITROM_VIEWS . '/partials/flash.php'; ?>
         <?= $content ?? '' ?>
     </div>
     <script src="/assets/js/app.js" defer></script>

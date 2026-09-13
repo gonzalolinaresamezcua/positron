@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Positron\Services;
+namespace Positrom\Services;
 
-use Positron\Core\Config;
-use Positron\Core\Database;
-use Positron\Models\Setting;
-use Positron\Models\UsageEvent;
+use Positrom\Core\Config;
+use Positrom\Core\Database;
+use Positrom\Models\Setting;
+use Positrom\Models\UsageEvent;
 
 final class UsageLimiter
 {

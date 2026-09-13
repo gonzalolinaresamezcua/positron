@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers\Admin;
+namespace Positrom\Controllers\Admin;
 
-use Positron\Core\View;
-use Positron\Models\Payment;
+use Positrom\Core\View;
+use Positrom\Models\Payment;
 
 final class PaymentsController
 {

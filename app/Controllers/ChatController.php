@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Positron\Controllers;
+namespace Positrom\Controllers;
 
-use Positron\Core\Auth;
-use Positron\Core\Config;
-use Positron\Core\View;
-use Positron\Models\Conversation;
-use Positron\Models\Message;
-use Positron\Models\Subscription;
-use Positron\Models\UsageEvent;
-use Positron\Services\CursorClient;
-use Positron\Services\CursorNotConfiguredException;
-use Positron\Services\CursorRequestException;
-use Positron\Services\UsageExhaustedException;
-use Positron\Services\UsageLimiter;
+use Positrom\Core\Auth;
+use Positrom\Core\Config;
+use Positrom\Core\View;
+use Positrom\Models\Conversation;
+use Positrom\Models\Message;
+use Positrom\Models\Subscription;
+use Positrom\Models\UsageEvent;
+use Positrom\Services\CursorClient;
+use Positrom\Services\CursorNotConfiguredException;
+use Positrom\Services\CursorRequestException;
+use Positrom\Services\UsageExhaustedException;
+use Positrom\Services\UsageLimiter;
 
 final class ChatController
 {
@@ -33,7 +33,7 @@ final class ChatController
         $messages = $current !== null ? Message::forConversation((int) $current['id']) : [];
         $usage = (new UsageLimiter())->snapshot((int) $user['id']);
         View::render('chat/index', [
-            'title' => 'Chat POSITRON',
+            'title' => 'Chat POSITROM',
             'user' => $user,
             'subscription' => $sub,
             'conversations' => $conversations,
@@ -139,7 +139,7 @@ final class ChatController
     {
         $sub = Subscription::forUser((int) $user['id']);
         if (!Subscription::isChatAllowed($sub)) {
-            if (\Positron\Core\Router::wantsJson() || ($_SERVER['HTTP_ACCEPT'] ?? '') === 'application/json') {
+            if (\Positrom\Core\Router::wantsJson() || ($_SERVER['HTTP_ACCEPT'] ?? '') === 'application/json') {
                 json_response(['ok' => false, 'error' => 'Suscripción inactiva.'], 403);
             }
             redirect('/checkout');

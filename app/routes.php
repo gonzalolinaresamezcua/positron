@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use Positron\Controllers\AccountController;
-use Positron\Controllers\Admin\ClientsController;
-use Positron\Controllers\Admin\DashboardController;
-use Positron\Controllers\Admin\PaymentsController;
-use Positron\Controllers\Admin\SettingsController;
-use Positron\Controllers\Admin\UsageController;
-use Positron\Controllers\AuthController;
-use Positron\Controllers\ChatController;
-use Positron\Controllers\CheckoutController;
-use Positron\Controllers\HomeController;
-use Positron\Controllers\WebhookController;
-use Positron\Core\Router;
+use Positrom\Controllers\AccountController;
+use Positrom\Controllers\Admin\ClientsController;
+use Positrom\Controllers\Admin\DashboardController;
+use Positrom\Controllers\Admin\PaymentsController;
+use Positrom\Controllers\Admin\SettingsController;
+use Positrom\Controllers\Admin\UsageController;
+use Positrom\Controllers\AuthController;
+use Positrom\Controllers\ChatController;
+use Positrom\Controllers\CheckoutController;
+use Positrom\Controllers\HomeController;
+use Positrom\Controllers\WebhookController;
+use Positrom\Core\Router;
 
 return static function (Router $router): void {
     $router->get('/', [HomeController::class, 'index']);

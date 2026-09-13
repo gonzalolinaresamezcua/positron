@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Positron\Services;
+namespace Positrom\Services;
 
-use Positron\Core\Auth;
-use Positron\Core\Config;
-use Positron\Models\Visit;
+use Positrom\Core\Auth;
+use Positrom\Core\Config;
+use Positrom\Models\Visit;
 
 final class VisitTracker
 {
@@ -16,7 +16,7 @@ final class VisitTracker
             return;
         }
         $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-        $key = (string) Config::get('app.key', 'positron');
+        $key = (string) Config::get('app.key', 'positrom');
         $hash = hash_hmac('sha256', $ip, $key);
         $ua = $_SERVER['HTTP_USER_AGENT'] ?? null;
         try {

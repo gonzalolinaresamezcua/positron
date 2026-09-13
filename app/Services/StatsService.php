@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Positron\Services;
+namespace Positrom\Services;
 
-use Positron\Models\Payment;
-use Positron\Models\UsageEvent;
-use Positron\Models\User;
-use Positron\Models\Visit;
-use Positron\Core\Database;
+use Positrom\Models\Payment;
+use Positrom\Models\UsageEvent;
+use Positrom\Models\User;
+use Positrom\Models\Visit;
+use Positrom\Core\Database;
 
 final class StatsService
 {

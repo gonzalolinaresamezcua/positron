@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Positron\Models;
+namespace Positrom\Models;
 
-use Positron\Core\Database;
+use Positrom\Core\Database;
 
 final class Subscription
 {

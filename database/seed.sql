@@ -3,9 +3,9 @@ SET NAMES utf8mb4;
 
 INSERT INTO users (email, password_hash, name, role, is_active, created_at)
 VALUES (
-    'admin@positron.local',
-    '$2y$10$7sBfanbpqiUSXquecWMEcuv5ByMXF0PE8GhT4XFzdiVbG4D.A.q6y',
-    'Administración POSITRON',
+    'admin@positrom.local',
+    '$2y$10$caXmbTDA40N9eRvC1BKvUeiF4rnDT7WWjvEF1iwAMOaOeXHEUrnPa',
+    'Administración POSITROM',
     'admin',
     1,
     NOW()

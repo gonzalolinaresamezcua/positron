@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Positron\Services;
+namespace Positrom\Services;
 
-use Positron\Core\Config;
-use Positron\Models\Payment;
-use Positron\Models\Setting;
-use Positron\Models\Subscription;
-use Positron\Models\User;
+use Positrom\Core\Config;
+use Positrom\Models\Payment;
+use Positrom\Models\Setting;
+use Positrom\Models\Subscription;
+use Positrom\Models\User;
 
 final class BillingService
 {
@@ -58,7 +58,7 @@ final class BillingService
             'amount' => ['currency' => 'EUR', 'value' => $amount],
             'customerId' => $customerId,
             'sequenceType' => 'first',
-            'description' => 'POSITRON — primer mes (12 €)',
+            'description' => 'POSITROM — primer mes (12 €)',
             'redirectUrl' => url('/checkout/retorno'),
             'webhookUrl' => url('/webhooks/mollie'),
             'metadata' => [
@@ -188,14 +188,14 @@ final class BillingService
         $sent = 0;
         foreach ($due as $row) {
             $period = period_ym((string) $row['next_payment_date']);
-            if (\Positron\Models\Reminder::alreadySent((int) $row['user_id'], $period)) {
+            if (\Positrom\Models\Reminder::alreadySent((int) $row['user_id'], $period)) {
                 continue;
             }
             $ok = $this->mailer->paymentReminder(
                 ['id' => $row['user_id'], 'email' => $row['email'], 'name' => $row['name']],
                 $row
             );
-            \Positron\Models\Reminder::mark((int) $row['user_id'], $period);
+            \Positrom\Models\Reminder::mark((int) $row['user_id'], $period);
             if ($ok) {
                 $sent++;
             } else {
@@ -259,7 +259,7 @@ final class BillingService
                     'amount' => ['currency' => 'EUR', 'value' => number_format($this->planPrice(), 2, '.', '')],
                     'interval' => '1 month',
                     'startDate' => $end,
-                    'description' => 'POSITRON suscripción mensual 12 €',
+                    'description' => 'POSITROM suscripción mensual 12 €',
                     'webhookUrl' => url('/webhooks/mollie'),
                     'metadata' => ['user_id' => (string) $userId],
                 ]);
@@ -291,7 +291,7 @@ final class BillingService
 
     private function subscriptionByCustomer(string $customerId): ?array
     {
-        return \Positron\Core\Database::fetch(
+        return \Positrom\Core\Database::fetch(
             'SELECT * FROM subscriptions WHERE mollie_customer_id = ? LIMIT 1',
             [$customerId]
         );
