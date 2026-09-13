@@ -2,7 +2,7 @@
     <div class="pg-hero-copy">
         <p class="pg-kicker">positrom.com · gratuito y autoalojado</p>
         <h1>POSITROM: chat IA <em>gratis</em> con OpenAI en tu servidor.</h1>
-        <p class="pg-lead">Despliega POSITROM en PHP + MySQL, conecta tu clave OpenAI y ofrece chat con <strong>gpt-6-astra</strong> a tu equipo o comunidad. Sin suscripciones, sin Mollie, sin paywall.</p>
+        <p class="pg-lead">Despliega POSITROM en PHP + MySQL, conecta tu clave OpenAI y ofrece chat con <strong>gpt-6-astra</strong> a tu equipo o comunidad. Sin suscripciones ni paywall.</p>
         <div class="pg-hero-actions">
             <a class="pg-btn pg-btn-ion pg-btn-lg" href="/registro">Crear cuenta gratis</a>
             <a class="pg-btn pg-btn-ghost pg-btn-lg" href="/#como">Cómo funciona</a>
