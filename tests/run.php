@@ -198,6 +198,8 @@ if (!is_resource($proc)) {
 
     $home = @file_get_contents("http://{$host}:{$port}/", false, stream_context_create(['http' => ['timeout' => 3, 'ignore_errors' => true]]));
     expect(is_string($home) && str_contains($home, 'POSITROM') && str_contains($home, '12'), 'GET / marketing');
+    expect(is_string($home) && str_contains($home, '10×') && str_contains($home, 'ChatGPT') && str_contains($home, 'Claude') && str_contains($home, 'Gemini'), 'landing vs grandes suscripciones');
+    expect(is_string($home) && !str_contains($home, 'POSITRON') && !str_contains($home, 'composer-2.5'), 'landing sin POSITRON ni composer-2.5');
     expect(is_string($home) && str_contains($home, 'positrom-galactico.css'), 'CSS Positrom Galáctico');
     expect(is_string($home) && str_contains($home, 'logo-positrom.svg'), 'logo SVG');
 

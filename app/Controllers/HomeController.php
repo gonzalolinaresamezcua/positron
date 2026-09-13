@@ -13,7 +13,7 @@ final class HomeController
     {
         $limiter = new UsageLimiter();
         View::render('public/home', [
-            'title' => 'POSITROM — chat de IA en órbita',
+            'title' => 'POSITROM — 10× vs ChatGPT, Claude y Gemini',
             'price' => $limiter->budgetEur() > 0 ? $limiter->budgetEur() : 12.0,
         ], 'layouts/public');
     }
